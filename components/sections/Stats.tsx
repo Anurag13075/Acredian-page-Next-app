@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import { motion, useInView, animate } from "framer-motion"
+import { motion, useInView, animate } from "motion/react"
 
 const stats = [
   { value: 10, suffix: "K+", label: "Professionals Trained For Exceptional Career Success" },
