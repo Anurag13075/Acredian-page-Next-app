@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
-import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useState, useRef } from 'react'
+import { ChevronDown } from 'lucide-react'
+import { motion, AnimatePresence, useInView } from 'motion/react'
 import { useModal } from '@/components/providers/ModalProvider'
 
 const TABS = ['About the Course', 'About the Delivery', 'Miscellaneous']
@@ -35,80 +36,141 @@ export default function FAQ() {
   const { openModal } = useModal()
   const [activeTab, setActiveTab] = useState('About the Course')
   const [openQs, setOpenQs] = useState<number[]>([])
+  const ref = useRef(null)
+  const inView = useInView(ref, { once: true, margin: "-80px" })
 
   const toggleQ = (idx: number) => {
-    if (openQs.includes(idx)) {
-      setOpenQs(openQs.filter(i => i !== idx))
-    } else {
-      setOpenQs([...openQs, idx])
-    }
+    setOpenQs(prev =>
+      prev.includes(idx) ? prev.filter(i => i !== idx) : [...prev, idx]
+    )
   }
 
   return (
     <section id="faqs" className="py-24 bg-white border-t border-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 pl-4 md:pl-20">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={ref}>
+
+        {/* Heading */}
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-16 pl-4 md:pl-20"
+        >
           <h2 className="text-[2.5rem] font-bold text-[#1a202c]">
             Frequently Asked <span className="text-[#3182ce]">Questions</span>
           </h2>
-        </div>
+        </motion.div>
 
         <div className="flex flex-col md:flex-row gap-16 max-w-6xl mx-auto">
+
           {/* Tabs */}
           <div className="md:w-1/3 flex flex-col gap-4">
-            {TABS.map((tab) => (
-              <button
+            {TABS.map((tab, idx) => (
+              <motion.button
                 key={tab}
+                initial={{ opacity: 0, x: -24 }}
+                animate={inView ? { opacity: 1, x: 0 } : {}}
+                transition={{ duration: 0.6, delay: 0.15 + idx * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => {
                   setActiveTab(tab)
                   setOpenQs([])
                 }}
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
                 className={`py-5 px-6 rounded-lg text-center font-bold text-lg transition-all ${
                   activeTab === tab
                     ? 'bg-white text-[#3182ce] shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-white'
                     : 'bg-white text-gray-500 border border-gray-200 hover:border-gray-300'
                 }`}
               >
-                {tab}
-              </button>
+                {/* Active indicator bar */}
+                <span className="relative">
+                  {tab}
+                  {activeTab === tab && (
+                    <motion.span
+                      layoutId="tab-underline"
+                      className="absolute -bottom-1 left-0 right-0 h-[2px] bg-[#3182ce] rounded-full"
+                    />
+                  )}
+                </span>
+              </motion.button>
             ))}
           </div>
 
           {/* FAQ Accordion */}
           <div className="md:w-2/3 pt-4">
-            <div className="flex flex-col gap-2">
-              {FAQS[activeTab]?.map((faq, idx) => (
-                <div key={idx} className="border-b border-gray-200 pb-5 mb-3">
-                  <button
-                    onClick={() => toggleQ(idx)}
-                    className="w-full flex items-center justify-between py-2 text-left font-bold text-[1.1rem] text-[#1a202c] hover:text-[#3182ce] transition-colors"
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={activeTab}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                className="flex flex-col gap-2"
+              >
+                {FAQS[activeTab]?.map((faq, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: idx * 0.08, ease: [0.16, 1, 0.3, 1] }}
+                    className="border-b border-gray-200 pb-5 mb-3"
                   >
-                    <span>{faq.q}</span>
-                    {openQs.includes(idx) ? (
-                      <ChevronUp className="w-6 h-6 text-gray-400 shrink-0 ml-4" />
-                    ) : (
-                      <ChevronDown className="w-6 h-6 text-gray-400 shrink-0 ml-4" />
-                    )}
-                  </button>
-                  {openQs.includes(idx) && (
-                    <div className="pt-3 text-gray-600 text-[15px] leading-relaxed font-medium">
-                      {faq.a}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    <button
+                      onClick={() => toggleQ(idx)}
+                      className="w-full flex items-center justify-between py-2 text-left font-bold text-[1.1rem] text-[#1a202c] hover:text-[#3182ce] transition-colors group"
+                    >
+                      <span>{faq.q}</span>
+                      <motion.div
+                        animate={{ rotate: openQs.includes(idx) ? 180 : 0 }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+                        className="shrink-0 ml-4"
+                      >
+                        <ChevronDown className="w-6 h-6 text-gray-400 group-hover:text-[#3182ce] transition-colors" />
+                      </motion.div>
+                    </button>
+
+                    <AnimatePresence initial={false}>
+                      {openQs.includes(idx) && (
+                        <motion.div
+                          key="answer"
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                          className="overflow-hidden"
+                        >
+                          <p className="pt-3 text-gray-600 text-[15px] leading-relaxed font-medium">
+                            {faq.a}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
           </div>
         </div>
 
-        <div className="mt-20 text-center">
-          <button 
+        {/* CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ duration: 0.7, delay: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          className="mt-20 text-center"
+        >
+          <motion.button
             onClick={openModal}
-            className="bg-[#3182ce] hover:bg-[#2b6cb0] text-white px-10 py-3 rounded-lg font-bold text-lg transition-colors shadow-md"
+            whileHover={{ scale: 1.04, backgroundColor: "#2b6cb0" }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 300, damping: 18 }}
+            className="bg-[#3182ce] text-white px-10 py-3 rounded-lg font-bold text-lg shadow-md"
           >
             Enquire Now
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
+
       </div>
     </section>
   )
