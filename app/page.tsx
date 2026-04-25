@@ -12,23 +12,24 @@ import DeliveryApproach from '@/components/sections/DeliveryApproach'
 import FAQ from '@/components/sections/FAQ'
 import Testimonials from '@/components/sections/Testimonials'
 import CTA from '@/components/sections/CTA'
+import { AnimateOnScroll } from '@/components/ui/AnimateOnScroll'
 
 export default function Home() {
   return (
     <main className="overflow-hidden min-h-screen bg-white">
       <Navbar />
       <Hero />
-      <Stats />
-      <Clients />
-      <AccredianEdge />
-      <DomainExpertise />
-      <CourseSegmentation />
-      <WhoShouldJoin />
-      <CATFramework />
-      <DeliveryApproach />
-      <FAQ />
-      <Testimonials />
-      <CTA />
+      <AnimateOnScroll><Stats /></AnimateOnScroll>
+      <AnimateOnScroll><Clients /></AnimateOnScroll>
+      <AnimateOnScroll><AccredianEdge /></AnimateOnScroll>
+      <AnimateOnScroll><DomainExpertise /></AnimateOnScroll>
+      <AnimateOnScroll><CourseSegmentation /></AnimateOnScroll>
+      <AnimateOnScroll><WhoShouldJoin /></AnimateOnScroll>
+      <AnimateOnScroll><CATFramework /></AnimateOnScroll>
+      <AnimateOnScroll><DeliveryApproach /></AnimateOnScroll>
+      <AnimateOnScroll><FAQ /></AnimateOnScroll>
+      <AnimateOnScroll><Testimonials /></AnimateOnScroll>
+      <AnimateOnScroll><CTA /></AnimateOnScroll>
       <Footer />
     </main>
   )

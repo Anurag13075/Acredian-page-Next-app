@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown, ChevronUp } from 'lucide-react'
+import { useModal } from '@/components/providers/ModalProvider'
 
 const TABS = ['About the Course', 'About the Delivery', 'Miscellaneous']
 
@@ -31,6 +32,7 @@ const FAQS: Record<string, { q: string; a: string }[]> = {
 }
 
 export default function FAQ() {
+  const { openModal } = useModal()
   const [activeTab, setActiveTab] = useState('About the Course')
   const [openQs, setOpenQs] = useState<number[]>([])
 
@@ -100,7 +102,10 @@ export default function FAQ() {
         </div>
 
         <div className="mt-20 text-center">
-          <button className="bg-[#3182ce] hover:bg-[#2b6cb0] text-white px-10 py-3 rounded-lg font-bold text-lg transition-colors shadow-md">
+          <button 
+            onClick={openModal}
+            className="bg-[#3182ce] hover:bg-[#2b6cb0] text-white px-10 py-3 rounded-lg font-bold text-lg transition-colors shadow-md"
+          >
             Enquire Now
           </button>
         </div>

@@ -1,7 +1,11 @@
+'use client'
 import { CheckCircle2 } from 'lucide-react'
 import Image from 'next/image'
+import { useModal } from '@/components/providers/ModalProvider'
 
 export default function Hero() {
+  const { openModal } = useModal()
+
   return (
     <section id="home" className="pt-32 pb-8 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-[#f4faff] rounded-[2.5rem] relative flex flex-col md:flex-row items-center min-h-[500px] px-12 py-16 overflow-hidden shadow-sm">
@@ -31,7 +35,10 @@ export default function Hero() {
             </div>
           </div>
           
-          <button className="bg-[#3182ce] hover:bg-[#2b6cb0] text-white px-8 py-3 rounded-lg font-semibold text-xl transition-colors shadow-md">
+          <button 
+            onClick={openModal}
+            className="bg-[#3182ce] hover:bg-[#2b6cb0] text-white px-8 py-3 rounded-lg font-semibold text-xl transition-colors shadow-md"
+          >
             Enquire Now
           </button>
         </div>

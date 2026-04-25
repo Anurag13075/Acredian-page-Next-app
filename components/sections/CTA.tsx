@@ -1,6 +1,10 @@
+'use client'
 import { Headset, ChevronRight } from 'lucide-react'
+import { useModal } from '@/components/providers/ModalProvider'
 
 export default function CTA() {
+  const { openModal } = useModal()
+
   return (
     <section className="py-20 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -26,7 +30,10 @@ export default function CTA() {
           </div>
           
           <div className="relative z-10 shrink-0">
-            <button className="bg-white text-[#1875f0] hover:bg-gray-50 px-8 py-3.5 rounded-lg font-bold text-lg flex items-center gap-2 transition-colors shadow-sm">
+            <button 
+              onClick={openModal} 
+              className="bg-white text-[#1875f0] hover:bg-gray-50 px-8 py-3.5 rounded-lg font-bold text-lg flex items-center gap-2 transition-colors shadow-sm"
+            >
               Contact Us <ChevronRight className="w-5 h-5" strokeWidth={2.5} />
             </button>
           </div>
